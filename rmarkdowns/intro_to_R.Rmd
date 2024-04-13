@@ -33,8 +33,7 @@ Welcome to R! We'll go over some brief introductory information on how to get st
 ### Packages and Libraries
 One of the most helpful tools to an R programmer are R packages! In a nutshell, an R package is a toolbox that can have a variety of things that can be useful to you (datasets, functions, etc.). Packages are stored in a *library* in R. You already have some R packages installed - let's use the `library()` function to see which packages you have. 
 
-```{r}
-library()
+
 ```
 
 A new window should have opened up with a list of packages and a short description! 
@@ -47,6 +46,11 @@ We used the `library()` function within a code chunk (discussed last video). We 
   
     - For mac: Cmd + option + i
     - For PC: Ctrl + alt + i
+
+```{r}
+library()
+
+```
   
   - The beginning of a code chunk will always start with three dashes followed by {r} and end with three dashes
 
@@ -96,6 +100,9 @@ Let's practice creating some variables:
 ```{r}
 my_name <- "Victoria DelaCruz" # character strings are stored within quotations
 my_name # run the name of your variable to see the output
+
+
+
 ```
 
 2. my_age
@@ -103,11 +110,27 @@ my_name # run the name of your variable to see the output
 my_age = 20 # numeric values do not need any quotations
 my_age # run the name of your variable to see the output
 my_age + 5 # how old will you be in 5 years?
+
+
+
 ```
 
 #### <span style="color: red;">Challenge 1</span>
-Create a my_name variable with your name assigned to the variable instead of "Victoria DelaCruz". Then, create a my_age variable with your age. 
+Create a my_name variable with your name assigned to the variable instead of "Victoria DelaCruz". Then, create a my_age variable with your age.
+```
+```{r}
+my_name <- "Bryson Pau"
+```
 
+
+```{r}
+my_age = 31
+my_age + 5
+
+```
+
+
+```
 #### Different Types of Data
 
 Understanding the different types of data is crucial when building out your visualizations and throughout the data analysis process. It is super useful when trying to figure out what graph to use or what story you're trying to tell through your data.
