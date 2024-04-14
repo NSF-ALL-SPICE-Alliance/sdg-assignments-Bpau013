@@ -425,7 +425,7 @@ sdr_data %>%
 ```
 ```{r}
 sdr_data %>%
-  filter(regions_used_for_the_sdr == "Africa")
+  filter(regions_used_for_the_sdr == "Oceania")
 ```
 
 Notes: 
@@ -436,6 +436,12 @@ Notes:
 
 #### <span style="color: red;">Challenge 3</span>
 Using the `filter()` function, filter for another region other than Oceania. Assign it to a variable named `new_region`. 
+
+```{r}
+new_region sdr_data %>%
+  filter(regions_used_for_the_sdr == "East & South Asia")
+```
+
 
 **Important**
 
