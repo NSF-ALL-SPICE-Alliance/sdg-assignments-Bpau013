@@ -49,6 +49,10 @@ We used the `library()` function within a code chunk (discussed last video). We 
 
 ```{r}
 library()
+```{r}
+library()
+```
+
 
 ```
   
@@ -71,6 +75,14 @@ Let's double check to see if it installed correctly using the following code:
 ```{r}
 system.file(package = "tidyverse") # input the name of the package in quotes
 ```
+```{r}
+```{r}
+system.file(package = "tidyverse")
+```
+
+```
+
+
 
 If you got a response giving you a file path - you're all set! You successfully installed your first package! 
 
@@ -81,6 +93,16 @@ To be able to use the package and its functions in R Studio, we need to load the
 ```{r, message=FALSE}
 library(tidyverse) # put the name of the package/library in the parenthesis 
 ```
+
+```{r}
+```{r}
+library(tidyverse)
+```
+
+```
+
+```
+
 Awesome! Now we can access the many cool things that the tidyverse package can do for us. We'll start using this package and its functions as we go along.
 
 [Check out the tidyverse package documentation](https://www.tidyverse.org/)
@@ -211,6 +233,10 @@ Let's start looking into a dataset. In data science, we perform exploratory data
 library(here) # allows us to cut out long file paths, ensures reproducibility
 library(janitor) # helps us clean column names
 ```
+```{r}
+library(janitor)
+```
+
 
 Note: **You will most likely get an error.** If you get an error about not having these packages installed, run the install.packages("packagename") code in the console. We went over this on line 48 under the *Installing a Package* header
 
@@ -224,13 +250,25 @@ In the code chunk below, we use the `read_csv()` function to read in the csv fil
   - We use the `here()` function to cut out long file paths. Instead of starting at the home directory on our computer and having to point R towards the csv file we want to read in with *"Users/Victoria/data_science/SDR-2023-Landscape/SDR-2023-Data.csv"*, we can simply tell R to start within the directory of our current R project and find the SDR-2023-Data.csv in our data folder. 
   
     - This also **ensures reproducibility** because as long as we share R projects on github, our project directories will always be the same
+
 ```{r, message=FALSE}
 sdr_data <- read_csv(here("data/SDR-2023-Data.csv")) # assigning the dataset to a variable so that we can look at/reference it
+
+
+
+
+
+```
+
 # to view the whole dataset you can click on sdr_data in your environment pane at the top right of your screen)
 ```
 Cleaning names
 ```{r}
 sdr_data <- clean_names(sdr_data) # cleaning column names 
+```{r}
+sdr_data <- clean_names(sdr_data)
+```
+
 ```
 
 Note: In programming, we don't use spaces in names (usually, if you want to use a space between words, you'd use an underscore, slash, or other punctuation). That's why we used the `clean_names` function from the `janitor` package, to clean our column names and replace spaces with underscores.
@@ -242,25 +280,43 @@ Understanding what your data looks like is crucial to the data analysis process.
 ```{r}
 head(sdr_data) # view the first couple of rows and columns of your dataset
 ```
+```
+```{r}
+head(sdr_data)
+```
+
 
 As we talked about earlier, it's always helpful to know what types of data you're handling. The code below shows us what type of data type each column holds (for ex., chr = character, num = numeric), the number of rows (you'll see that it's 206:666, meaning 206 rows and 666 columns), and some of the first few values for each column. 
 
 ```{r, include = FALSE}
+data_structure <- str(sdr_data)
+```
+```{r, include = FALSE}
 data_structure <- str(sdr_data) # looking at the data structure
 ```
+
 
 Wow, that's a lot of information on the dataset structure! Let's run some code to look at some of these aspects closely:
 
 - Viewing column names
 ```{r}
 column_names <- as.list(colnames(sdr_data))  # click on column_names in your environment pane at the top right of your screen to check them out
+```
 
+
+```{r}
+column_names <- as.list(colnames(sdr_data))
 ```
 
 - How many rows and columns
 ```{r}
 dim(sdr_data) # looking at dimensions
 ```
+```{r}
+dim(sdr_data)
+
+```
+
 
 - How many NA values are there in the dataset?
 
@@ -268,6 +324,9 @@ NA values represent missing values in our data. It's important to know how many 
 
 ```{r}
 library(naniar) # helpful package to view missing data
+
+```
+
 ```
 
 Note: if you run into an error loading the `naniar` package, run the install.packages() code in the console that we went through earlier
@@ -276,6 +335,17 @@ Note: if you run into an error loading the `naniar` package, run the install.pac
 sdr_data %>% 
   miss_var_summary() %>% 
   arrange(desc(pct_miss))
+```
+```
+```{r}
+sdr_data %>%
+  miss_var_summary() %>%
+  arrange(desc(pct_miss))
+```
+
+  
+```
+  
 ```
 
 Note: In the above code, we are using the `%>%` (pipe) operator. This allows us to connect functions within our code so that it performs each step at a time. We start off with our data (sdr_data), then use the pipe operator to use the miss_var_summary() function, and then again to use the arrange() function. 
@@ -288,11 +358,19 @@ Let's say we're interested in looking at the different values for the column *Go
 
 ```{r}
 table(sdr_data$goal_7_dash) # after the $ operator, write the name of the column you're interested in exploring
+
+```
+
 ```
 Awesome! Let's try to input two columns to explore further: 
 
 ```{r}
 table(sdr_data$goal_7_dash, sdr_data$regions_used_for_the_sdr) # looking at 2 columns, separated by a ,
+
+```{r}
+table(sdr_data$goal_7_dash, sdr_data$regions_used_for_the_sdr)
+```
+
 ```
 Now you can see how many countries in each region got green, orange, red, and yellow scores for SDG Goal 7. We've also used 8 new functions (View, read_csv, head, dim, etc.). Great job!
 
@@ -308,6 +386,12 @@ Select is a function used to subset or select columns in your R data frame. Let'
 ```{r}
 sdr_data %>% 
   select(goal_3_score, goal_4_score)
+```{r}
+sdr_data %>%
+  select(goal_3_score, goal_4_score)
+```
+  
+  
 ```
 
 You'll notice we used the pipe operator ` %>% ` after the name of the dataframe, and then listed the columns we were interested in the select() function
@@ -315,7 +399,17 @@ You'll notice we used the pipe operator ` %>% ` after the name of the dataframe,
 What if we want to subset specific rows? We can do this by using the filter function. 
 
 #### <span style="color: red;">Challenge 2</span>
-Using the `select()` function, select two new SDG goal scores. Assign it to a variable named `SDG_scores`. 
+Using the `select()` function, select two new SDG goal scores. Assign it to a variable named `SDG_scores`.
+
+```{r}
+```{r}
+sdr_data %>%
+  select(goal_2_score, goal_8_score)
+```
+SDG_scores
+
+```
+
 
 *2. filter()*
 
@@ -326,6 +420,12 @@ In order to do this, we write out the column name "regions_used_for_the_sdr" fol
 ```{r}
 sdr_data %>% 
   filter(regions_used_for_the_sdr == "Oceania")
+```
+  
+```
+```{r}
+sdr_data %>%
+  filter(regions_used_for_the_sdr == "Africa")
 ```
 
 Notes: 
@@ -348,6 +448,8 @@ When executing the last 2 code chunks, notice that we did not use the assign arr
 ```{r}
 oceania_data <- sdr_data %>% 
   filter(regions_used_for_the_sdr == "Oceania")
+
+
 ```
 
 Now, you will have a dataframe called *oceania_data* in your environment pane (top right of the screen) that you can click on
