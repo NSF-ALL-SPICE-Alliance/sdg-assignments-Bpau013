@@ -287,14 +287,14 @@ Can you edit the code chunk above that generates the map to:
 ```{r}
 mytext <- paste(
     "Country: ", sdr_data_world_joined$country,"<br/>", 
-    "Goal 2 Score: ", round(sdr_data_world_joined$goal_2_score, 2), 
+    "Goal 5 Score: ", round(sdr_data_world_joined$goal_2_score, 2), 
     sep="") %>%
   lapply(htmltools::HTML)
 
 leaflet(sdr_data_world_joined) %>% 
   addTiles()  %>% 
   setView( lat=10, lng=0 , zoom=2) %>%
-  addPolygons(stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5, color = ~colorQuantile("YlGn", goal_2_score)(goal_2_score), label = mytext)
+  addPolygons(stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5, color = ~colorQuantile("YlGn", goal_5_score)(goal_5_score), label = mytext)
 ```
   
     
