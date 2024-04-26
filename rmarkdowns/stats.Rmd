@@ -220,3 +220,24 @@ ggplot(sdr_data, aes(x = goal_12_score,
       - are there any points that don't follow the trend (outliers)
         
         - which country(s) are outliers?
+```{r}
+ggplot(sdr_data, aes(x = goal_13_score, 
+                     y = goal_8_score, label = country)) +
+  geom_point() +
+  geom_smooth() +
+  stat_cor() +
+  theme_minimal() 
+  
+
+```
+
+```{r}
+sdg_correlation <- ggplot(sdr_data, aes(x = goal_13_score, 
+                     y = goal_8_score, label = country)) +
+  geom_point() +
+  geom_smooth() +
+  stat_cor(output.type = "text", label.sep='\n') +
+  theme_minimal()
+ggplotly(sdg_correlation)
+```
+In this graph, when most countries increase there attention to take care of the planet, there is a significant decrease in promoting employment for all. Which indicates that when most of the attention has been taken away from sustainable employment for most of the population in these countries as they focus on taking care of our planet. Cuba on the other hand, have shown as relatively high score in both 8 and 13 scores, making it one of the outlier countries. Afghanistan, is another outlier country, having a high SDG 13 score with an signicantly low SDG 8 score.
