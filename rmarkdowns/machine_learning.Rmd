@@ -334,6 +334,12 @@ plotPartial(pd)
 Edit this code chunk `k2 <- kmeans(sdr_data_imputed, centers = 2)` under the silhouette plot to increase the number of clusters
 
 - Then, run the code chunk `fviz_cluster(k2, data = sdr_data_imputed) + theme_minimal()` to see the new visualization with the increased number of clusters
+```{r}
+k3 <- kmeans(sdr_data_imputed, centers = 3)
+```
+```{r}
+fviz_cluster(k3, data = sdr_data_imputed) + theme_minimal()
+```
   
 #### <span style="color: red;">Challenge 2</span>
 
@@ -344,9 +350,41 @@ Edit this code chunk `rf_matmort <- randomForest(normalized_score_sdg3_matmort ~
   - Run the remainder of the code chunks below to see the different outputs
     
     - *Hint* make sure to continue replacing rf_matmort with the new name you assign your random forest model
+```{r}
+rf_water <- randomForest(normalized_score_sdg6_water ~ ., data = sdr_data_imputed, importance = TRUE)
+```
 
 
 
+```{r}
+rf_water
+```
+```{r}
+importance_dfi <- as.data.frame(rf_water$importance)
+                               
+```
+```{r}
+importance_dfi_top_10 <- importance_df %>%
+  rownames_to_column(var = "variable") %>%
+  slice_max(n = 10, order_by = `%IncMSE`)
+```
+```{r}
+ggplot(importance_dfi_top_10, aes(x = `%IncMSE`, y = reorder(variable, `%IncMSE`))) +
+  geom_bar(stat = "identity", fill = "steelblue", color = "black") +
+  theme_minimal() +
+  labs(title = "Most Important Variables in Predicting Water Accessibility",
+       subtitle = "Top 10",
+       y = "SDG Indicator",
+       x = "Feature Importance (% Increase in Mean Squared Error)")
+```
+```{r}
+pdp::partial(rf_water, pred.var = "normalized_score_sdg7_elecac", plot = TRUE)
+```
+```{r}
+pd <- pdp::partial(rf_water, pred.var = c("normalized_score_sdg7_elecac", "normalized_score_sdg6_sanita"))
+# Default PDP
+plotPartial(pd)
+```
 
 
   
