@@ -1,0 +1,48 @@
+---
+title: "Japan's Well Being"
+author: "Bryson Pau"
+date: "2024-05-01"
+output: html_document
+---
+Load in packages
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+library(janitor)
+library(plotly)
+```
+
+Read in data
+```{r}
+sdr_data <- read.csv(here("data/SDR-2023-Data.csv"))
+```
+Clean up the data
+```{r}
+sdr_data <- sdr_data %>%
+  clean_names()
+```
+Focus on a specific region and country
+```{r}
+OECD_sdr_data <- sdr_data %>%
+  filter(regions_used_for_the_sdr == "OECD")
+```
+```{r}
+Japan_sdr_data <- sdr_data %>% 
+  filter(country == "Japan")
+```
+
+Now let's take a look at the overall SDG 12 Score for Japan compared to other countries
+```{r}
+bar_Japan <- ggplot(OECD_sdr_data, aes(x= goal_12_score, y = country)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(title = "Country Comparison", 
+       y = "Countries", 
+       x = "SDG 12 Score")
+  
+ggplotly(bar_Japan)
+```
+Focusing on Japan, the country has scored above 50 points based on responsible consumption and production. Some of the indicators that are still challenging are SO2 emissions on imports and electronic waste. But there are rising trends with exporting plastic waste and nitrogen emissions on imports.
+
