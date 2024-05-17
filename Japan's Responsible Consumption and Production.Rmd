@@ -95,6 +95,7 @@ Japan_cor <-ggplot(OECD_sdr_data, aes(x = goal_12_score,
  
 ggplotly(Japan_cor)
 ```
+
 Based off of the OECD region, Japan falls in a negative correlation at -0.59. In an article from Nature <https://www.nature.com/articles/d42473-023-00260-z>, Japan is looking to research solar cells to help with responsible consumption. They are also looking to fund national research initiatives that will help develop lasers for low-emission manufacturing. Since Japan falls within the OECD region, let's take a look at what the prediction percentage rate looks like when we single out the individual indicators based in the SDG 12 score.
 
 First, let's select the normalized scores within the OECD data frame.
@@ -173,6 +174,8 @@ OECD_cluster <- fviz_cluster(k8, data = OECD_sdr_data_imputed1) +
   theme_minimal()
 ggplotly(OECD_cluster)
 ```
+
+
 We can see that Japan is in one of eight clusters that are based off of 95 SDG indicators.
 
 ```{r}
@@ -209,6 +212,7 @@ ggplot(importance_OECD_top_10, aes(x = `%IncMSE`, y = reorder(variable, `%IncMSE
        y = "SDG Indicator",
        x = "Feature Importance (% Increase in Mean Squared Error)")
 ```
+
 The highest cause of electronic waste the higher establishments of higher education universities across the OECD region. The second factor is the accessible universal health coverage across the 38 countries that are involved. If we were to single out the factor of higher education universities and what kind of predictor would it be to electronic waste, what would it look like?
 
 ```{r}
