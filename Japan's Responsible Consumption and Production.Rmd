@@ -38,7 +38,7 @@ OECD_sdr_data <- sdr_data %>%
   filter(regions_used_for_the_sdr == "OECD")
 ```
 
-Now let's take a look at the overall SDG 12 Score for Japan compared to other countries
+Now let's take a look at the overall SDG 12 Score for Japan compared to other countries by using a scatter plot using ggplot:
 ```{r}
 plot_Japan <- ggplot(OECD_sdr_data, aes(x= goal_12_score, y = reorder(country, goal_12_score), color = country)) +
   geom_point(stat = "identity") +
@@ -49,9 +49,9 @@ plot_Japan <- ggplot(OECD_sdr_data, aes(x= goal_12_score, y = reorder(country, g
   
 ggplotly(plot_Japan)
 ```
-Focusing on Japan, the country has scored above 50 points based on responsible consumption and production. Some of the indicators that are still challenging are SO2 emissions on imports and electronic waste. The electronic waste is due to illegal collection, dumping and exporting. But there are rising trends with exporting plastic waste and nitrogen emissions on imports. Also, out of 38 countries, Japan lies within the top 50% of countries in the region who are being responsible with their emissions and electronic waste.
+Focusing on Japan, the country has scored above 50 points based on responsible consumption and production. Some of the indicators that are still challenging are SO2 emissions on imports and electronic waste according to the 2023 Sustainable Development Report. The electronic waste is due to illegal collection, dumping and exporting. But there are rising trends with exporting plastic waste and nitrogen emissions on imports. There are many other indicators within the SDG 12 Score that plays a factor to the overall score, but we will focus on the electronic waste indicator. Also, out of 38 countries, Japan lies within the top 50% of countries in the region who are being responsible with their emissions and electronic waste.
 
-##Japan's SDG Scores
+## Japan's SDG Scores
 
 Now let's take a look at Japan's overall scores
 ```{r}
@@ -83,15 +83,16 @@ Scores_longer <- ggplot(Japan_scores_longer, aes(x = Score, y = reorder(Goal, Sc
        y = "Goals")
 ggplotly(Scores_longer)
 ```
-From here, we can see that Japan has no issues with poverty, living healthy lifestyles or suffering in infrastructure. However, there is a significant issue in regards to the cleanliness in their waters, gender equality and quality of life on land. Seeing this observation, could there possibly be a direct correlation between these score that affect them in a negative or positive way? One possible correlation that can be determined would be the increased focus on infrastructure could lower the awareness of responsible consumption and production, from numerous trial and error of new technology or upgraded infrastructure to keep the roads in Japan safer. Let's see what the correlation of Japan's SDG Scores 9 & 12.
+From here, we can see that Japan has no issues with poverty, living healthy lifestyles or suffering in infrastructure. However, there is a significant issue in regards to the cleanliness in their waters, gender equality and quality of life on land. Seeing this observation, could there possibly be a direct correlation between these score that affect them in a negative or positive way? One possible correlation that can be determined would be the increased focus on infrastructure could lower the awareness of responsible consumption and production, from numerous trial and error of new technology or upgraded infrastructure to keep the roads in Japan safer. Let's see what the correlation of Japan's SDG Scores 9 & 12 using a scatter plot with a linear regression to show what kind of correlation is displayed within the OECD region.
 
 ```{r}
 Japan_cor <-ggplot(OECD_sdr_data, aes(x = goal_12_score, 
-                     y = goal_9_score)) +
+                     y = goal_9_score, label = country)) +
   geom_point() +
   geom_smooth() +
   stat_cor(output.type = "text", label.sep = '\n') +
-  theme_minimal() 
+  theme_minimal()
+ 
 ggplotly(Japan_cor)
 ```
 Based off of the OECD region, Japan falls in a negative correlation at -0.59. In an article from Nature <https://www.nature.com/articles/d42473-023-00260-z>, Japan is looking to research solar cells to help with responsible consumption. They are also looking to fund national research initiatives that will help develop lasers for low-emission manufacturing. Since Japan falls within the OECD region, let's take a look at what the prediction percentage rate looks like when we single out the individual indicators based in the SDG 12 score.
@@ -134,21 +135,18 @@ missing_data_by_country1 <- OECD_sdr_data_normalized_scores_longer %>%
 
 missing_data_by_country1
 ```
-Next, we will single out only the countries that have no missing data and focus on the countries that have missing data within them. Note, that you will need to change the "pct_miss" to "n_miss".
+Next, we will single out only the countries that have no missing data and focus on the countries that have missing data within them. Note, that you will need to focus on the "n_miss" variables, due to us only looking at countries within the region that have these variables.
 
 ```{r}
 completely_na_countries1  <- missing_data_by_country1$country[missing_data_by_country1$n_miss == 0]
 completely_na_countries1
 ```
+Then, we will create a data frame that is only focused on these countries.
 ```{r}
 OECD_sdr_data_normalized_scores_no_n_miss_countries <- OECD_sdr_data_normalized_scores %>% 
   filter(!country %in% completely_na_countries1[missing_data_by_country1$n_miss==0])
 ```
-```{r}
-gg_miss_var(OECD_sdr_data_normalized_scores_no_n_miss_countries, show_pct = TRUE) +
-  theme(axis.text.y = element_text(size = 8)) +
-  geom_hline(yintercept = 20, color = "steelblue", linetype = "dashed")
-```
+Finally, we will impute this data using the missRanger package to find out what are the missing indicators.
 ```{r}
 OECD_sdr_data_normalized_scores_less_na <- OECD_sdr_data_normalized_scores_no_n_miss_countries %>%
   select(where(~ sum(is.na(.))/length(.) <= 0.2))
@@ -162,6 +160,7 @@ OECD_sdr_data_imputed1 <- OECD_sdr_data_imputed %>%
   remove_rownames %>%
   column_to_rownames(var="country")
 ```
+Japan is among the 38 countries that can be clustered into other countries that have the same predictors
 ```{r}
 fviz_nbclust(OECD_sdr_data_imputed1, kmeans, method = "silhouette")
 ```
@@ -174,10 +173,12 @@ OECD_cluster <- fviz_cluster(k8, data = OECD_sdr_data_imputed1) +
   theme_minimal()
 ggplotly(OECD_cluster)
 ```
+We can see that Japan is in one of eight clusters that are based off of 95 SDG indicators.
+
 ```{r}
 country_clusters <- as.data.frame(k8$cluster)
 ```
-
+Now, let's take a look at what are the **strongest predictors** that have an affect on the electronic waste within the OECD region
 ```{r}
 rf_ewaste <- randomForest(normalized_score_sdg12_ewaste ~ .,
                              data = OECD_sdr_data_imputed1,
@@ -187,41 +188,48 @@ rf_ewaste <- randomForest(normalized_score_sdg12_ewaste ~ .,
 ```{r}
 rf_ewaste
 ```
+We can see that there is a 75.5% of variables that can be explained for the cause of electronic waste. Let's take a look at what are the important factors that are the cause of this. First, we will need to create a data frame that shows only the important factors.
 
 ```{r}
 importance_OECD <- as.data.frame(rf_ewaste$importance)
 ```
-
+Then, we will select only the top 10 factors.
 ```{r}
 importance_OECD_top_10 <- importance_OECD %>%
   rownames_to_column(var = "variable") %>%
   slice_max(n = 10, order_by = `%IncMSE`)
 ```
-
+Finally, we will plot these results on a bar graph.
 ```{r}
 ggplot(importance_OECD_top_10, aes(x = `%IncMSE`, y = reorder(variable, `%IncMSE`))) +
   geom_bar(stat = "identity", fill = "steelblue", color = "black") +
   theme_minimal() +
-  labs(title = "Most Important Variables in Predicting Responsible Consumption & Production",
+  labs(title = "Most Important Variables in Predicting Electronic Waste",
        subtitle = "Top 10",
        y = "SDG Indicator",
        x = "Feature Importance (% Increase in Mean Squared Error)")
 ```
+The highest cause of electronic waste the higher establishments of higher education universities across the OECD region. The second factor is the accessible universal health coverage across the 38 countries that are involved. If we were to single out the factor of higher education universities and what kind of predictor would it be to electronic waste, what would it look like?
 
 ```{r}
 pdp::partial(rf_ewaste, pred.var = "normalized_score_sdg9_uni", plot = TRUE)
 ```
-
+Now, let's see what the prediction would look like if we took the top 2 scores for this region.
 ```{r}
 pd <- pdp::partial(rf_ewaste, pred.var = c("normalized_score_sdg9_uni", "normalized_score_sdg3_uhc"))
 # Default PDP
 plotPartial(pd)
 ```
-- The x axis represents the normalized score for Higher Education Universities
-- The y axis represents the normalized score for Universal Health Coverage
-- The color is the models prediction of SDG 12 Electronic waste
 
-In conclusion, seeing this visual, we see that the prediction of electronic waste based off the OECD region, significantly decreases as higher education universities are established in various countries and universal health coverage is more accessible to the population. On another note, electronic waste is at a higher prediction rate when both of these variables are at its lowest production, with Japan being one of these countries.
+
+- The x axis represents the normalized score for Higher Education Universities.
+
+- The y axis represents the normalized score for Universal Health Coverage.
+
+- The color is the models prediction of SDG 12 Electronic waste.
+
+
+In conclusion, seeing this visual, we see that the prediction of electronic waste based off the OECD region, significantly decreases as higher education universities are established in various countries and universal health coverage is more accessible to the population. On another note, electronic waste is at a higher prediction rate when both of these variables are at its lowest production, with Japan being one of these countries. 
 
 
 
