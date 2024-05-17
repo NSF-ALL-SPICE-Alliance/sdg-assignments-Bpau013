@@ -218,6 +218,7 @@ The highest cause of electronic waste the higher establishments of higher educat
 ```{r}
 pdp::partial(rf_ewaste, pred.var = "normalized_score_sdg9_uni", plot = TRUE)
 ```
+
 Now, let's see what the prediction would look like if we took the top 2 scores for this region.
 ```{r}
 pd <- pdp::partial(rf_ewaste, pred.var = c("normalized_score_sdg9_uni", "normalized_score_sdg3_uhc"))
